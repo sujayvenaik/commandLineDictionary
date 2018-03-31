@@ -5,21 +5,22 @@ var program = require('commander'),
   wordDef = require('./util/functions').wordDefinition,
   wordSynonym = require('./util/functions').wordSynonym,
   wordAntonym = require('./util/functions').wordAntonym,
-  wordExamples = require('./util/functions').wordExamples;
+  wordExamples = require('./util/functions').wordExamples,
+  wordOfTheDay = require('./util/functions').wordOfTheDay;
 
 function wordAllDetails (word) {
   async.series({
     one: function(callback) {
-      wordDef(word, function (err, snippet) {callback(null, 1);});
+      wordDef(word, function (err, snippet) { console.log(snippet); callback(null, 1);});
     },
     two: function(callback){
-        wordSynonym(word, function (err, snippet) { callback(null, 2)});
+        wordSynonym(word, function (err, snippet) { console.log(snippet); callback(null, 2)});
     },
     three: function (callback) {
-      wordAntonym(word, function (err, snippet) { callback(null, 3)});
+      wordAntonym(word, function (err, snippet) { console.log(snippet); callback(null, 3)});
     },
     four: function (callback) {
-      wordExamples(word, function (err, snippet) { callback (null, 4)});
+      wordExamples(word, function (err, snippet) { console.log(snippet); callback (null, 4)});
     }
   }, function(err, results) {
       if(err) { console.log('Something Wrong'); }
@@ -28,34 +29,32 @@ function wordAllDetails (word) {
 
 program
   .version('0.0.1')
-  .command('auth')
-  .description('Definition for a word')
-  .option('-a, --all','List all files and folders')
-  .option('-l, --long','')
-  .action(authenticate);
-
-program
-  .version('0.0.1')
   .command('def <word>')
   .description('Definition for a word')
-  .action(word => wordDef(word, function (err,snippet) {}));
+  .action(word => wordDef(word, function (err,snippet) {console.log(snippet);}));
 
 program
   .version('0.0.1')
   .command('syn <word>')
   .description('Synonyms for a word')
-  .action(word => wordSynonym(word, function (err,snippet) {}));
+  .action(word => wordSynonym(word, function (err,snippet) {console.log(snippet);}));
 
 program
   .version('0.0.1')
   .command('ant <word>')
   .description('Antonyms for a word')
-  .action(word => wordAntonym(word, function (err,snippet) {}));
+  .action(word => wordAntonym(word, function (err,snippet) {console.log(snippet);}));
 
 program
   .version('0.0.1')
   .command('dict <word>')
-  .description('Examples for a word')
-  .action(word => wordAllDetails(word, function (err,snippet) {}));
+  .description('All details for a word')
+  .action(word => wordAllDetails(word, function (err,snippet) {console.log(snippet);}));
+
+program
+  .version('0.0.1')
+  .command('wotd')
+  .description('Details for word of the day')
+  .action(function() { wordOfTheDay(function (err, word){ wordAllDetails(word);})});
 
 program.parse(process.argv);

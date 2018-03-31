@@ -1,0 +1,26 @@
+{
+  "name": "commandline",
+  "version": "1.0.0",
+  "description": "command line dictionary tool",
+  "bin": {
+    "dict": "./commands.js"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sujayvenaik/commandLineDictionary.git"
+  },
+  "author": "Sujay Venaik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sujayvenaik/commandLineDictionary/issues"
+  },
+  "homepage": "https://github.com/sujayvenaik/commandLineDictionary#readme",
+  "dependencies": {
+    "commander": "^2.15.1",
+    "request": "^2.85.0"
+  }
+}

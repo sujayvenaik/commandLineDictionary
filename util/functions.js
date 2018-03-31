@@ -16,7 +16,6 @@ module.exports = {
 
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
-      console.log(`The def for word: ${word}\n${JSON.parse(body)[0].text}`);
       cb(null, `The def for word: ${word}\n${JSON.parse(body)[0].text}\n`);
     });
 
@@ -35,10 +34,13 @@ module.exports = {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let snippet = `The Synonyms for the word ${word} are:\n`;
-      _.forEach(JSON.parse(body)[0].words, function(value) {
-        snippet += value + '\n';
-      });
-      console.log(snippet);
+      if(JSON.parse(body)[0] && JSON.parse(body)[0].words){
+        _.forEach(JSON.parse(body)[0].words, function(value) {
+          snippet += value + '\n';
+        });
+      } else {
+        snippet += 'No Synonyms';
+      }
       cb(null, snippet);
     });
 
@@ -56,17 +58,20 @@ module.exports = {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let snippet = `The Antonyms for the word ${word} are:\n`;
-      _.forEach(JSON.parse(body)[0].words, function(value) {
-        snippet += value + '\n';
-      });
-      console.log(snippet);
+      if(JSON.parse(body)[0] && JSON.parse(body)[0].words){
+        _.forEach(JSON.parse(body)[0].words, function(value) {
+          snippet += value + '\n';
+        });
+      } else {
+        snippet += 'No Antonyms';
+      }
       cb(null, snippet);
     });
 
   },
   wordExamples : function (word, cb) {
     var options = { method: 'GET',
-      url: 'http://api.wordnik.com:80/v4/word.json/hello/examples',
+      url: `http://api.wordnik.com:80/v4/word.json/${word}/examples`,
       qs: 
       { includeDuplicates: 'false',
         useCanonical: 'false',
@@ -82,8 +87,20 @@ module.exports = {
       _.forEach(res.examples, function (value) {
         snippet += value.text + '\n';
       });
-    console.log(snippet);
     cb(null, snippet);
   });
+  },
+  wordOfTheDay : function (cb) {
+    var options = { method: 'GET',
+      url: 'http://api.wordnik.com:80/v4/words.json/wordOfTheDay',
+      qs: { api_key: 'a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5' },
+      headers: 
+      { 'Postman-Token': '5f0b00b0-0e06-4a7a-90e3-486be2aedee3',
+        'Cache-Control': 'no-cache' } };
+
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      cb(null, JSON.parse(body).word);
+    });
   }
 }

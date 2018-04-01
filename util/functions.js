@@ -2,7 +2,13 @@ var request = require("request"),
   _ = require('lodash');
 
 module.exports = {
-
+  
+  /**
+   * Used to get word definition for a word
+   * @param  {String} word
+   * @param  {Function} cb - callback
+   * @returns {String}
+   */
   wordDefinition : function  (word, cb) {
     var options = { method: 'GET',
       url: `http://api.wordnik.com:80/v4/word.json/${word}/definitions`,
@@ -16,11 +22,17 @@ module.exports = {
 
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
-      cb(null, `The def for word: ${word}\n${JSON.parse(body)[0].text}\n`);
+      cb(null, `The def for word is: \n${JSON.parse(body)[0].text}\n`);
     });
 
   },
 
+  /**
+   * Used to get synonyms for a word
+   * @param  {String} word
+   * @param  {Function} cb - callback
+   * @returns {String}
+   */
   wordSynonym : function (word, cb) {
     var options = { method: 'GET',
       url: `http://api.wordnik.com:80/v4/word.json/${word}/relatedWords`,
@@ -33,7 +45,7 @@ module.exports = {
 
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
-      let snippet = `The Synonyms for the word ${word} are:\n`;
+      let snippet = `The Synonyms for the word are:\n`;
       if(JSON.parse(body)[0] && JSON.parse(body)[0].words){
         _.forEach(JSON.parse(body)[0].words, function(value) {
           snippet += value + '\n';
@@ -45,6 +57,13 @@ module.exports = {
     });
 
   },
+
+  /**
+   * Used to get antonyms for a word
+   * @param  {String} word
+   * @param  {Function} cb - callback
+   * @returns {String}
+   */
   wordAntonym : function (word, cb) {
     var options = { method: 'GET',
       url: `http://api.wordnik.com:80/v4/word.json/${word}/relatedWords`,
@@ -57,7 +76,7 @@ module.exports = {
 
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
-      let snippet = `The Antonyms for the word ${word} are:\n`;
+      let snippet = `The Antonyms for the word are:\n`;
       if(JSON.parse(body)[0] && JSON.parse(body)[0].words){
         _.forEach(JSON.parse(body)[0].words, function(value) {
           snippet += value + '\n';
@@ -69,6 +88,13 @@ module.exports = {
     });
 
   },
+
+  /**
+   * Used to get examples for a word
+   * @param  {String} word
+   * @param  {Function} cb - callback
+   * @returns {String}
+   */
   wordExamples : function (word, cb) {
     var options = { method: 'GET',
       url: `http://api.wordnik.com:80/v4/word.json/${word}/examples`,
@@ -83,13 +109,19 @@ module.exports = {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let res = JSON.parse(body);
-      let snippet = `The Examples for the word ${word} are:\n`;
+      let snippet = `The Examples for the word are:\n`;
       _.forEach(res.examples, function (value) {
         snippet += value.text + '\n';
       });
     cb(null, snippet);
   });
   },
+
+  /**
+   * Used to get word of the day
+   * @param  {Function} cb - callback
+   * @returns {String}
+   */
   wordOfTheDay : function (cb) {
     var options = { method: 'GET',
       url: 'http://api.wordnik.com:80/v4/words.json/wordOfTheDay',

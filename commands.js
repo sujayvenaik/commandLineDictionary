@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var program = require('commander'),
   async = require('async'),
+  prompt = require('inquirer').prompt,
   authenticate = require('./util/functions').authenticate,
   wordDef = require('./util/functions').wordDefinition,
   wordSynonym = require('./util/functions').wordSynonym,
@@ -56,5 +57,23 @@ program
   .command('wotd')
   .description('Details for word of the day')
   .action(function() { wordOfTheDay(function (err, word){ wordAllDetails(word);})});
+
+program
+  .version('0.0.1')
+  .command('play')
+  .description('Let\'s play a game')
+  .action(function() { wordOfTheDay(function (err, word) {
+    console.log('Guess the word:\n');
+    wordDef(word, function (err, snippet) {
+      console.log(snippet);
+      prompt([
+        {type: 'input', name: 'word', message: 'Enter your answer'}
+      ]).then(answer => {
+        if( answer.word===word ){ console.log('Correct') }
+        else { wordAntonym(word, function (err, snippet) { console.log(snippet); })}
+      })
+    });
+  }
+  )});
 
 program.parse(process.argv);

@@ -39,7 +39,7 @@ module.exports = {
           snippet += value + '\n';
         });
       } else {
-        snippet += 'No Synonyms';
+        snippet += 'No Synonyms\n';
       }
       cb(null, snippet);
     });
@@ -63,7 +63,7 @@ module.exports = {
           snippet += value + '\n';
         });
       } else {
-        snippet += 'No Antonyms';
+        snippet += 'No Antonyms\n';
       }
       cb(null, snippet);
     });
